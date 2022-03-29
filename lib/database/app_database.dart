@@ -32,16 +32,19 @@ Future<int> save(Contact contact) async {
   return await db.insert('contacts', contactMap);
 }
 
-Future<List<Contact>> findAll() async {
-  final db = await createDatabase();
-
-  final List<Map<String, dynamic>> maps = await db.query('contacts');
-
-  return List.generate(maps.length, (i) {
-    return Contact(
-      maps[i]['id'],
-      maps[i]['name'],
-      maps[i]['account_number'],
-    );
-  });  
+Future<List<Contact>> findAll() {
+  return createDatabase().then((db) {
+    return db.query('contacts').then((maps) {
+      final List<Contact> contacts = [];
+      for (Map<String, dynamic> map in maps) {
+        final Contact contact = Contact(
+          map['id'],
+          map['name'],
+          map['account_number'],
+        );
+        contacts.add(contact);
+      }
+      return contacts;
+    });
+  });
 }
