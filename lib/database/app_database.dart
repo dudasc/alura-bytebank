@@ -1,30 +1,25 @@
 import 'package:bytebank_app/models/contact.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-Future<Database> createDatabase() async {
-  WidgetsFlutterBinding.ensureInitialized();
+Future<Database> getDatabase() async {
+  final String path = join(await getDatabasesPath(), 'bytebank2.db');
 
-  final database = await openDatabase(
-    join(await getDatabasesPath(), 'bytebasnk.db'),
+  return openDatabase(
+    path,
     onCreate: (db, version) {
-      return db.execute(
-        'CREATE TABLE contacts('
-        'id INTEGER PRIMARY KEY, '
-        'name TEXT, '
-        'account_number INTEGER)',
-      );
+      db.execute('CREATE TABLE contacts('
+          'id INTEGER PRIMARY KEY, '
+          'name TEXT, '
+          'account_number INTEGER)');
     },
-    version: 1,
+    version: 21,
     onDowngrade: onDatabaseDowngradeDelete,
   );
-
-  return database;
 }
 
 Future<int> save(Contact contact) async {
-  final db = await createDatabase();
+  final Database db = await getDatabase();
   final Map<String, dynamic> contactMap = Map();
 
   contactMap['name'] = contact.name;
@@ -33,19 +28,19 @@ Future<int> save(Contact contact) async {
   return await db.insert('contacts', contactMap);
 }
 
-Future<List<Contact>> findAll() {
-  return createDatabase().then((db) {
-    return db.query('contacts').then((maps) {
-      final List<Contact> contacts = [];
-      for (Map<String, dynamic> map in maps) {
-        final Contact contact = Contact(
-          map['id'],
-          map['name'],
-          map['account_number'],
-        );
-        contacts.add(contact);
-      }
-      return contacts;
-    });
-  });
+Future<List<Contact>> findAll() async {
+  final Database db = await getDatabase();
+  final List<Map<String, dynamic>> result = await db.query('contacts');
+  final List<Contact> contacts = [];
+
+  for (Map<String, dynamic> map in result) {
+    final Contact contact = Contact(
+      map['id'],
+      map['name'],
+      map['account_number'],
+    );
+    contacts.add(contact);
+  }
+
+  return contacts;
 }
