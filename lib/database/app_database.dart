@@ -6,7 +6,7 @@ import 'package:sqflite/sqflite.dart';
 Future<Database> createDatabase() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final database = openDatabase(
+  final database = await openDatabase(
     join(await getDatabasesPath(), 'bytebasnk.db'),
     onCreate: (db, version) {
       return db.execute(
@@ -17,6 +17,7 @@ Future<Database> createDatabase() async {
       );
     },
     version: 1,
+    onDowngrade: onDatabaseDowngradeDelete,
   );
 
   return database;
