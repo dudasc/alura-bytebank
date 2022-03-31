@@ -9,7 +9,6 @@ class ContactDao {
       '$_accountNumber INTEGER)';
   
   static const String _tableName = 'contacts';
-
   static const String _id = 'id';
   static const String _name = 'name';
   static const String _accountNumber = 'account_number';
@@ -25,7 +24,7 @@ class ContactDao {
     final Database db = await getDatabase();
     final List<Map<String, dynamic>> result = await db.query(_tableName);
     final List<Contact> contacts = _toList(result);
-    
+
     return contacts;
   }
 
