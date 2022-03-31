@@ -1,4 +1,4 @@
-import 'package:bytebank_app/database/app_database.dart';
+import 'package:bytebank_app/database/dao/contact_dao.dart';
 import 'package:bytebank_app/models/contact.dart';
 import 'package:bytebank_app/screens/contact_form.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +9,8 @@ class ContactsList extends StatefulWidget {
 }
 
 class _ContactsListState extends State<ContactsList> {
+  final ContactDao _dao = ContactDao();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,7 +18,7 @@ class _ContactsListState extends State<ContactsList> {
         title: const Text("Contact List"),
       ),
       body: FutureBuilder(
-        future: findAll(),
+        future: _dao.findAll(),
         builder: (BuildContext context, AsyncSnapshot<List<Contact>> snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -52,7 +54,7 @@ class _ContactsListState extends State<ContactsList> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-           Navigator.of(context)
+          Navigator.of(context)
               .push(
                 MaterialPageRoute(
                   builder: (context) => ContactForm(),
