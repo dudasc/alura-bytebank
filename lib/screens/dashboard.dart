@@ -84,8 +84,8 @@ class _FeatureItem extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(8.0),
             color: Theme.of(context).primaryColor,
-            height: 150,
-            width: 190,
+            height: 100,
+            width: 160,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
