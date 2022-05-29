@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:http_interceptor/http_interceptor.dart';
 
 class LoggingInterceptor implements InterceptorContract {
